@@ -7,7 +7,6 @@ import { loader } from '../../libs/loader.js';
 import { lang } from '../../common/language.js';
 import { storage } from '../../common/storage.js';
 import { session } from '../../common/session.js';
-import { offline } from '../../common/offline.js';
 import { comment } from '../components/comment.js';
 import * as confetti from '../../libs/confetti.js';
 import { pool } from '../../connection/request.js';
@@ -333,7 +332,6 @@ export const guest = (() => {
      */
     const pageLoaded = () => {
         lang.init();
-        offline.init();
         progress.init();
 
         const hasComment = !!document.getElementById('comments');
