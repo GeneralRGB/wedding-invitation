@@ -39,14 +39,69 @@ export const guest = (() => {
         const hour = document.getElementById('hour');
         const minute = document.getElementById('minute');
         const second = document.getElementById('second');
+        const countdownBlock = document.getElementById('countdown-block');
+        const countdown = document.getElementById('countdown');
+        const countdownTitle = document.getElementById('countdown-title');
+        const labels = {
+            day: document.getElementById('day-label'),
+            hour: document.getElementById('hour-label'),
+            minute: document.getElementById('minute-label'),
+            second: document.getElementById('second-label'),
+        };
+
+        /**
+         * @param {number} value
+         * @param {[string, string, string]} forms
+         * @returns {string}
+         */
+        const plural = (value, forms) => {
+            const mod100 = value % 100;
+            const mod10 = value % 10;
+
+            if (mod100 >= 11 && mod100 <= 14) {
+                return forms[2];
+            }
+
+            if (mod10 === 1) {
+                return forms[0];
+            }
+
+            if (mod10 >= 2 && mod10 <= 4) {
+                return forms[1];
+            }
+
+            return forms[2];
+        };
+
+        let wasPast = null;
 
         const updateCountdown = () => {
-            const distance = Math.abs(count - Date.now());
+            const now = Date.now();
+            const isPast = now >= count;
+            const distance = isPast ? now - count : count - now;
+            const values = {
+                day: Math.floor(distance / (1000 * 60 * 60 * 24)),
+                hour: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+                minute: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+                second: Math.floor((distance % (1000 * 60)) / 1000),
+            };
 
-            day.textContent = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
-            hour.textContent = pad(Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)));
-            minute.textContent = pad(Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)));
-            second.textContent = pad(Math.floor((distance % (1000 * 60)) / 1000));
+            day.textContent = pad(values.day);
+            hour.textContent = pad(values.hour);
+            minute.textContent = pad(values.minute);
+            second.textContent = pad(values.second);
+
+            labels.day.textContent = plural(values.day, ['день', 'дня', 'дней']);
+            labels.hour.textContent = plural(values.hour, ['час', 'часа', 'часов']);
+            labels.minute.textContent = plural(values.minute, ['минута', 'минуты', 'минут']);
+            labels.second.textContent = plural(values.second, ['секунда', 'секунды', 'секунд']);
+
+            if (isPast !== wasPast) {
+                countdownTitle.textContent = isPast ? 'Нашей семье уже' : 'До свадьбы осталось';
+                countdown.setAttribute('aria-label', isPast ? 'Время со дня нашей свадьбы' : 'Обратный отсчёт до свадьбы');
+                countdownBlock.classList.toggle('countdown-block-past', isPast);
+                wasPast = isPast;
+            }
 
             util.timeOut(updateCountdown, 1000 - (Date.now() % 1000));
         };

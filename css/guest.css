@@ -273,8 +273,58 @@ a {
 }
 
 .countdown-block {
-    padding-bottom: 88px;
-    border-bottom: 1px solid var(--line);
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    padding: 72px 48px 68px;
+    border: 1px solid rgba(165, 82, 37, 0.16);
+    border-radius: 28px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.82), rgba(243, 230, 215, 0.62));
+    box-shadow: 0 24px 70px rgba(87, 47, 32, 0.08);
+    isolation: isolate;
+}
+
+.countdown-block::before {
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    color: rgba(165, 82, 37, 0.065);
+    content: "\2661";
+    font-family: Georgia, serif;
+    font-size: clamp(18rem, 46vw, 34rem);
+    font-weight: 400;
+    line-height: 0.7;
+    pointer-events: none;
+    transform: translate(-50%, -46%);
+}
+
+.countdown-block::after {
+    position: absolute;
+    z-index: -1;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: rgba(196, 154, 108, 0.12);
+    content: "";
+    filter: blur(2px);
+    pointer-events: none;
+    right: -72px;
+    top: -92px;
+}
+
+.countdown-block .eyebrow {
+    margin-bottom: 0;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    transition: color 300ms ease;
+}
+
+.countdown-block-past .eyebrow {
+    color: var(--forest-dark);
 }
 
 .countdown {
@@ -301,6 +351,7 @@ a {
     font-size: clamp(2.8rem, 7vw, 4.6rem);
     font-weight: 600;
     line-height: 0.92;
+    font-variant-numeric: tabular-nums;
 }
 
 .countdown-item span {
@@ -674,7 +725,8 @@ a {
     }
 
     .countdown-block {
-        padding-bottom: 64px;
+        padding: 56px 14px 52px;
+        border-radius: 22px;
     }
 
     .countdown {
